@@ -156,14 +156,29 @@ func main() {
 						switch real := v.(type) {
 						case *ast.BasicLit:
 							if real.Kind == token.STRING && len(real.Value) > 2 {
-								obfuscated.Values = [][]string{bytesToHex(aesgcm.Seal(nil, nonce, []byte(real.Value[1:len(real.Value)-1]), nil))}
+								obfuscated.Values = [][]string{
+									bytesToHex(
+										aesgcm.Seal(nil,
+											nonce,
+											[]byte(interpretString(real.Value[1:len(real.Value)-1])),
+											nil),
+									),
+								}
 								variables = append(variables, obfuscated)
 								real.Value = `"" // ` + real.Value[1:len(real.Value)-1]
 							}
 						case *ast.CompositeLit:
 							for _, elt := range real.Elts {
 								if inner, ok := elt.(*ast.BasicLit); ok && inner.Kind == token.STRING && len(inner.Value) > 2 {
-									obfuscated.Values = append(obfuscated.Values, bytesToHex(aesgcm.Seal(nil, nonce, []byte(inner.Value[1:len(inner.Value)-1]), nil)))
+									obfuscated.Values = append(obfuscated.Values,
+										bytesToHex(
+											aesgcm.Seal(
+												nil,
+												nonce,
+												[]byte(interpretString(inner.Value[1:len(inner.Value)-1])),
+												nil),
+										),
+									)
 								}
 							}
 							// TODO: find a way to add comments with the content of []string
@@ -246,6 +261,38 @@ func main() {
 	writer.Flush()
 }
 
+func interpretString(str string) string {
+	ret := strings.Builder{}
+	escape := false
+
+	for _, c := range str {
+		if c == '\\' {
+			escape = true
+			continue
+		}
+
+		if escape {
+			escape = false
+			switch c {
+			case 'n':
+				ret.WriteString("\n")
+			case 't':
+				ret.WriteString("\t")
+			case '\\':
+				ret.WriteString("\\")
+			default:
+				panic(fmt.Sprintf("unknown escape character %q\n", string(c)))
+			}
+
+			continue
+		}
+
+		ret.WriteRune(c)
+	}
+
+	return ret.String()
+}
+
 // randomSeed returns a default random seed.
 func randomSeed() string {
 	randomSeed := make([]byte, 16)
@@ -302,6 +349,10 @@ func bytesToHex(value []byte) []string {
 				s += fmt.Sprintf("0x%02x,", c)
 			} else {
 				s += fmt.Sprintf(" 0x%02x,", c)
+			}
+
+			if c == '\n' {
+				fmt.Println("IS NEWLINE!!")
 			}
 		}
 		ret = append(ret, s)
