@@ -5,7 +5,7 @@
 # strobfus
 *strobfus* provides a simple tool to obfuscate sensible strings inside Go binaries, when you have no other choice but to put them there.
 ```
-$ go get -u github.com/znly/strobfus
+$ go get -u github.com/diegosz/strobfus
 ```
 ## Usage
 Place your sensible strings inside a dedicated file with the right `go generate` clause, e.g.:
