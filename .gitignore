@@ -16,5 +16,5 @@
 examples/*_gen.go
 
 .vscode/
-build
+build/
 CHANGELOG-REVIEW.md
