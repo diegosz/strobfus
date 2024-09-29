@@ -16,3 +16,4 @@
 examples/*_gen.go
 
 .vscode/
+build

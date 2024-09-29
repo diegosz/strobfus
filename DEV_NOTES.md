@@ -1,16 +1,11 @@
 # DEV
 
-## Fork Motivation
+## Test
 
-The pre-fork version of this package the Parser does not allow to call Parse() a second time, it fails with an error.
-
-For the way we use this package, we need to Parse one time to create the help template with the default values of the config struct prior the struct is filled with the values defined in the environment variables, and then we need to Parse a second time after filling the environment variable values so the flag values overwrite any environment defined or default values.
-
-> Note that if we call ShowHelp for the first time after the second Parse, the default values are affected by the environment variables. To avoid this we need to call ShowHelp prior the second Parser or better Help.ExtractValues to capture the real default values.
-
-## TODO
-
-* [ ] Think if it's worthwhile to do an upstream pull request..., the original package is awesome as it is, may me this complicate things for the rest...
+```shell
+make build
+build/strobfus -filename examples/secret.go -output examples/secret_gen.go -seed 534c454598514685b45d12d9d4ca93b4
+```
 
 ## Chore
 
@@ -41,7 +36,7 @@ v<UPSTREAM_MAYOR>.<UPSTREAM_MINOR>.<FORK_TAG>-pre+build
 For example:
 
 | upstream | fork              | issue |
-| -------- | ----------------- | ----- |
+|----------|-------------------|-------|
 | 2.3.1    |                   |       |
 |          | 2.3.1002003001001 | ok    |
 | 2.3.2    |                   |       |
@@ -56,7 +51,7 @@ For example:
 Invalid options:
 
 | upstream | fork      | issue                                                 |
-| -------- | --------- | ----------------------------------------------------- |
+|----------|-----------|-------------------------------------------------------|
 | 2.3.1    |           |                                                       |
 |          | 2.3.2     | future conflict with upstream tag                     |
 |          | 2.4.1     | worst future conflict with upstream tag               |
