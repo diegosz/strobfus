@@ -1,6 +1,17 @@
 # CHANGELOG
 
 
+## v0.0.2000000002004 (2024-09-29)
+
+### Bug Fixes
+
+- remove version prefix 'v' from generated file header
+
+### Chore Tasks
+
+- update version to v0.0.2000000002004
+
+
 ## v0.0.2000000002003 (2024-09-29)
 
 ### Chore Tasks
